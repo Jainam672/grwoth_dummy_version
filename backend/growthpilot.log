@@ -1,0 +1,22 @@
+2026-04-18 15:36:53,329 - main - INFO - 🚀 Initializing GrowthPilot Backend...
+2026-04-18 15:36:54,308 - passlib.utils.compat - DEBUG - loaded lazy attr 'SafeConfigParser': <class 'configparser.ConfigParser'>
+2026-04-18 15:36:54,308 - passlib.utils.compat - DEBUG - loaded lazy attr 'NativeStringIO': <class '_io.StringIO'>
+2026-04-18 15:36:54,308 - passlib.utils.compat - DEBUG - loaded lazy attr 'BytesIO': <class '_io.BytesIO'>
+2026-04-18 15:36:54,324 - passlib.registry - DEBUG - registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+2026-04-18 15:36:54,358 - main - INFO - 📊 Creating database tables...
+2026-04-18 15:36:54,358 - main - INFO - ✅ Database tables initialized successfully
+2026-04-18 15:36:54,374 - main - INFO - ⚙️ Configuring CORS...
+2026-04-18 15:36:54,374 - main - INFO - ✅ CORS middleware configured
+2026-04-18 15:36:54,374 - main - INFO - 🔌 Loading routers...
+2026-04-18 15:36:54,419 - main - INFO - ✅ All routers loaded successfully
+2026-04-18 15:36:54,423 - main - INFO - 🎉 GrowthPilot Backend started successfully!
+2026-04-18 15:36:54,424 - main - INFO - 📖 API Docs available at: http://localhost:8000/docs
+2026-04-18 15:36:54,424 - main - INFO - 🔒 Auth routes: /auth/register, /auth/login
+2026-04-18 15:38:52,796 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "D:\growthpilot_v2_fixed - With Dummy Ai\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-04-18 15:38:52,796 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '<unknown>'
+2026-04-18 15:38:52,796 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
