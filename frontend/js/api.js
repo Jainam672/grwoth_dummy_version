@@ -1,4 +1,7 @@
-const API_BASE = "http://localhost:8000";
+// const API_BASE = "http://localhost:8000";
+
+const API_BASE = "https://growthpilot-backend.onrender.com";
+
 
 // ─── Path resolver: works from both /pages/ and root ────────
 function _authPage(page) {
