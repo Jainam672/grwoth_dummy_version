@@ -3,145 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GrowthPilot – AI Chat</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root{--ink:#0a0a0f;--cream:#f5f0e8;--amber:#f5a623;--amber-deep:#d4860a;--sage:#2d4a3e;--sage-light:#3d6b5a;--panel:#111118;--border:rgba(255,255,255,0.07);}
-  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-  html,body{height:100%;overflow:hidden;}
-  body{background:var(--ink);color:var(--cream);font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;}
-  .topbar{height:64px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;}
-  .topbar-left{display:flex;align-items:center;gap:16px;}
-  .back-btn{color:rgba(245,240,232,0.5);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color .2s;padding:6px 12px;border:1px solid var(--border);border-radius:6px;}
-  .back-btn:hover{color:var(--cream);}
-  .topbar-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;}
-  .topbar-logo span{color:var(--amber);}
-  .ai-status{display:flex;align-items:center;gap:8px;background:rgba(45,74,62,.3);border:1px solid rgba(45,74,62,.5);padding:6px 14px;border-radius:100px;font-size:12px;color:rgba(245,240,232,0.7);}
-  .status-dot{width:6px;height:6px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .topbar-actions{display:flex;gap:10px;}
-  .icon-btn{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;color:rgba(245,240,232,0.6);text-decoration:none;}
-  .icon-btn:hover{background:rgba(255,255,255,.08);color:var(--cream);}
-  .chat-layout{flex:1;display:flex;overflow:hidden;}
-  .sidebar{width:260px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0;}
-  .sidebar-section{padding:0 16px;margin-bottom:24px;}
-  .sidebar-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,0.3);font-weight:600;margin-bottom:10px;padding:0 4px;}
-  .new-chat-btn{width:100%;padding:10px 14px;background:var(--amber);color:var(--ink);border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;}
-  .new-chat-btn:hover{background:var(--amber-deep);}
-  .chat-history{flex:1;overflow-y:auto;padding:0 16px;}
-  .chat-history::-webkit-scrollbar{width:4px;}
-  .chat-history::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
-  .history-item{padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:4px;transition:background .2s;border:1px solid transparent;font-size:13px;color:rgba(245,240,232,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .history-item:hover{background:rgba(255,255,255,.04);color:var(--cream);}
-  .history-item.active{background:rgba(45,74,62,.3);border-color:rgba(45,74,62,.5);color:var(--cream);}
-  .quick-prompts{padding:0 16px;margin-top:auto;}
-  .quick-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,0.3);font-weight:600;margin-bottom:10px;}
-  .quick-chip{display:block;width:100%;text-align:left;padding:8px 12px;margin-bottom:6px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:rgba(245,240,232,0.55);font-size:12px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;line-height:1.4;}
-  .quick-chip:hover{background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.2);color:var(--cream);}
-  .chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--ink);background-image:radial-gradient(ellipse at 80% 20%,rgba(45,74,62,.15) 0%,transparent 50%),radial-gradient(ellipse at 20% 80%,rgba(245,166,35,.04) 0%,transparent 50%);}
-  .welcome-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;}
-  .welcome-icon{font-size:56px;margin-bottom:20px;}
-  .welcome-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
-  .welcome-sub{color:rgba(245,240,232,0.5);font-size:15px;line-height:1.6;max-width:400px;margin-bottom:40px;}
-  .welcome-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:580px;}
-  .welcome-chip{padding:10px 18px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:100px;font-size:13px;color:rgba(245,240,232,0.7);cursor:pointer;transition:all .2s;}
-  .welcome-chip:hover{background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.3);color:var(--cream);}
-  .messages-area{flex:1;overflow-y:auto;padding:32px 40px;display:flex;flex-direction:column;gap:24px;}
-  .messages-area::-webkit-scrollbar{width:4px;}
-  .messages-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
-  .msg-row{display:flex;gap:14px;align-items:flex-start;max-width:820px;}
-  .msg-row.user{align-self:flex-end;flex-direction:row-reverse;}
-  .msg-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--sage),var(--amber));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-  .msg-row.user .msg-avatar{background:rgba(255,255,255,.08);border:1px solid var(--border);}
-  .msg-bubble{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px 16px 16px 16px;padding:16px 20px;font-size:14px;line-height:1.7;color:rgba(245,240,232,0.85);max-width:640px;}
-  .msg-row.user .msg-bubble{background:rgba(45,74,62,.3);border-color:rgba(45,74,62,.5);border-radius:16px 4px 16px 16px;color:var(--cream);}
-  .msg-bubble strong{color:var(--cream);}
-  .msg-bubble ul,.msg-bubble ol{padding-left:20px;margin:8px 0;}
-  .msg-bubble li{margin-bottom:4px;}
-  .msg-meta{font-size:11px;color:rgba(245,240,232,0.3);margin-top:6px;}
-  .msg-row.user .msg-meta{text-align:right;}
-  .insight-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
-  .insight-card{background:rgba(45,74,62,.25);border:1px solid rgba(45,74,62,.4);border-radius:10px;padding:12px;}
-  .insight-card .ic-val{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--amber);}
-  .insight-card .ic-lbl{font-size:11px;color:rgba(245,240,232,0.4);margin-top:3px;}
-  .typing-row{display:flex;gap:14px;align-items:flex-start;}
-  .typing-bubble{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px 16px 16px 16px;padding:16px 20px;display:flex;gap:5px;align-items:center;}
-  .typing-bubble span{width:7px;height:7px;background:rgba(245,240,232,0.4);border-radius:50%;animation:typing 1.2s infinite;}
-  .typing-bubble span:nth-child(2){animation-delay:.2s;}
-  .typing-bubble span:nth-child(3){animation-delay:.4s;}
-  @keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-  .input-area{padding:20px 40px 28px;background:var(--ink);border-top:1px solid var(--border);flex-shrink:0;}
-  .input-wrapper{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;display:flex;align-items:flex-end;gap:12px;transition:border-color .2s;max-width:860px;margin:0 auto;}
-  .input-wrapper:focus-within{border-color:rgba(245,166,35,.4);}
-  .input-icon-btn{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;color:rgba(245,240,232,0.5);}
-  .input-icon-btn:hover{background:rgba(255,255,255,.1);color:var(--cream);}
-  .input-icon-btn.recording{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#f87171;animation:recordPulse 1s infinite;}
-  @keyframes recordPulse{0%,100%{opacity:1}50%{opacity:.6}}
-  #inputBox{flex:1;background:transparent;border:none;outline:none;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;resize:none;min-height:22px;max-height:120px;line-height:1.5;padding:4px 0;}
-  #inputBox::placeholder{color:rgba(245,240,232,0.3);}
-  .send-btn{width:40px;height:40px;border-radius:10px;background:var(--amber);border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;color:var(--ink);}
-  .send-btn:hover{background:var(--amber-deep);transform:scale(1.05);}
-  .send-btn:disabled{background:rgba(255,255,255,.08);color:rgba(245,240,232,0.3);cursor:not-allowed;transform:none;}
-  .input-footer{text-align:center;margin-top:12px;font-size:11px;color:rgba(245,240,232,0.25);max-width:860px;margin-left:auto;margin-right:auto;}
-  .result-banner{background:rgba(45,74,62,.3);border:1px solid rgba(45,74,62,.5);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:10px;max-width:860px;margin:0 auto 16px;}
-  @media(max-width:768px){.sidebar{display:none;}.messages-area{padding:20px 16px;}.input-area{padding:16px 16px 20px;}}
-</style>
+<title>Agents • GrowthPilot Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-left">
-    <a href="dashboard.html" class="back-btn">← Dashboard</a>
-    <div class="topbar-logo">Growth<span>Pilot</span></div>
-    <div class="ai-status"><div class="status-dot"></div>AI Mentor Active</div>
-  </div>
-  <div class="topbar-actions">
-    <button class="icon-btn" title="Clear Chat" onclick="clearChat()">🗑️</button>
-    <button class="icon-btn" title="New Analysis" onclick="window.location.href='form.html'">📋</button>
-    <a href="dashboard.html" class="icon-btn" title="Dashboard">📊</a>
-  </div>
-</div>
-<div class="chat-layout">
+<div class="app-shell hide-secondary">
   <aside class="sidebar">
-    <div class="sidebar-section">
-      <button class="new-chat-btn" onclick="clearChat()">+ New Chat</button>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Recent Ideas</div>
-    </div>
-    <div class="chat-history" id="chatHistory"></div>
-    <div class="quick-prompts">
-      <div class="quick-title">Quick Prompts</div>
-      <button class="quick-chip" onclick="usePrompt('Analyze my business idea and give a feasibility score')">💡 Analyze my idea</button>
-      <button class="quick-chip" onclick="usePrompt('Help me estimate startup costs and budget breakdown')">💰 Estimate costs</button>
-      <button class="quick-chip" onclick="usePrompt('Create a detailed marketing plan for my business')">📣 Marketing plan</button>
-      <button class="quick-chip" onclick="usePrompt('Build a 90-day growth roadmap with milestones')">🗺️ Growth roadmap</button>
-    </div>
-  </aside>
-  <main class="chat-main" id="chatMain">
-    <div class="welcome-screen" id="welcomeScreen">
-      <div class="welcome-icon">🤖</div>
-      <h2 class="welcome-title">Ask me anything about your business.</h2>
-      <p class="welcome-sub">I'm your AI business mentor. Describe your idea and I'll give you a complete analysis — costs, strategy, roadmap, and more.</p>
-      <div class="welcome-chips">
-        <div class="welcome-chip" onclick="useWelcomeChip(this)">🍵 Open a tea café with ₹2L budget</div>
-        <div class="welcome-chip" onclick="useWelcomeChip(this)">💻 Start a freelancing business</div>
-        <div class="welcome-chip" onclick="useWelcomeChip(this)">🛒 Launch an online store</div>
-        <div class="welcome-chip" onclick="useWelcomeChip(this)">📚 Education startup feasibility</div>
-        <div class="welcome-chip" onclick="useWelcomeChip(this)">🏗️ Construction business plan</div>
-        <div class="welcome-chip" onclick="useWelcomeChip(this)">📱 Mobile app monetization</div>
+    <a href="../index.html" class="sidebar-brand">
+      <div class="brand-mark">GP</div>
+      <div class="brand-copy">
+        <strong>GrowthPilot Stack</strong>
+        <span>AI execution workspace</span>
+      </div>
+    </a>
+    <nav class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">◫</span><span class="nav-copy"><strong>Dashboard</strong><span>Command center</span></span></a>
+      <a class="nav-link active" href="chat.html"><span class="nav-icon">◎</span><span class="nav-copy"><strong>Agents</strong><span>Console + follow-ups</span></span></a>
+      <a class="nav-link" href="form.html"><span class="nav-icon">⌘</span><span class="nav-copy"><strong>Tasks</strong><span>Create a new run</span></span></a>
+      <a class="nav-link" href="history.html"><span class="nav-icon">⇄</span><span class="nav-copy"><strong>Workflows</strong><span>Saved runs</span></span></a>
+      <a class="nav-link" href="analytics.html"><span class="nav-icon">⋯</span><span class="nav-copy"><strong>Logs</strong><span>Metrics and throughput</span></span></a>
+      <a class="nav-link" href="settings.html"><span class="nav-icon">⚙</span><span class="nav-copy"><strong>Settings</strong><span>Profile and preferences</span></span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-meta">
+        <div class="helper-label">Recent workflows</div>
+        <strong>Recent workflows</strong>
+        <span>Pick one to continue</span>
+      </div>
+      <div class="list-stack" id="chatHistory">
+        <div class="activity-item">
+          <div class="activity-copy">
+            <strong>Loading workflows</strong>
+            <span>Syncing with your saved runs.</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="messages-area" id="messagesArea" style="display:none;"></div>
-  </main>
-</div>
-<div class="input-area">
-  <div class="input-wrapper">
-    <button class="input-icon-btn" id="voiceBtn" title="Voice Input" onclick="toggleVoice()">🎙️</button>
-    <textarea id="inputBox" placeholder="Describe your business idea, ask for strategies, costs, or advice..." rows="1"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+  </aside>
+
+  <div class="main-shell">
+    <div class="topbar">
+      <label class="search-shell">
+        <span>⌕</span>
+        <input type="text" placeholder="Search prompts, outputs, or workflow IDs..." aria-label="Search">
+      </label>
+      <div class="topbar-actions">
+        <a class="button-secondary" href="form.html">New Task</a>
+        <a class="button-ghost" href="dashboard.html">Back to Dashboard</a>
+        <button class="avatar-button" type="button">
+          <span class="avatar-orb" id="avatarEl">A</span>
+          <span id="topUserName">Agent Operator</span>
+        </button>
+      </div>
+    </div>
+
+    <main class="page-body">
+      <section class="page-header">
+        <div>
+          <div class="section-eyebrow">Agents</div>
+          <h1 class="page-title">Agent console</h1>
+          <p class="page-description">
+            Open a completed workflow and ask clear follow-up questions.
+          </p>
+        </div>
+      </section>
+
+      <section class="split-grid">
+        <div class="terminal-card">
+          <div class="card-head">
+            <div>
+              <div class="section-eyebrow">Conversation</div>
+              <h2 class="section-title">Transcript</h2>
+            </div>
+            <div class="button-row">
+              <button class="button-ghost" onclick="clearChat()">Clear</button>
+              <button class="button-secondary" onclick="copyTranscript()">Copy</button>
+            </div>
+          </div>
+          <div class="terminal-shell">
+            <div class="terminal-head">
+              <div class="terminal-actions">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+              </div>
+            </div>
+            <div class="terminal-body" id="messagesArea" style="display:none;"></div>
+          </div>
+          <div class="empty-card" id="welcomeScreen">
+            <strong>Load a workflow or start with a simple question</strong>
+            <div class="section-copy" style="max-width:620px; margin:0 auto 18px;">
+              This works best with a completed workflow, but you can also begin from scratch.
+            </div>
+            <div class="button-row" style="justify-content:center;">
+              <button class="button-secondary" onclick="usePrompt('Analyze my business idea and give a feasibility score')">Analyze idea</button>
+              <button class="button-secondary" onclick="usePrompt('Help me estimate startup costs and budget breakdown')">Estimate costs</button>
+              <button class="button-secondary" onclick="usePrompt('Create a detailed marketing plan for my business')">Marketing plan</button>
+              <button class="button-secondary" onclick="usePrompt('Build a 90-day growth roadmap with milestones')">Growth roadmap</button>
+            </div>
+          </div>
+          <div class="chat-input">
+            <textarea class="textarea" id="inputBox" placeholder="Ask the active agent to explain the output, refine the roadmap, or stress-test the idea..." rows="1"></textarea>
+            <button class="button" id="sendBtn" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+
+        <div class="inspector-grid">
+          <div class="panel-card">
+            <div class="panel-head">
+              <div>
+                <div class="section-eyebrow">Current workflow</div>
+                <h2 class="section-title">Context</h2>
+              </div>
+            </div>
+            <div class="list-stack" id="contextPanel">
+              <div class="activity-item">
+                <div class="activity-copy">
+                  <strong>No workflow selected</strong>
+                  <span>Open a completed run from the left to attach context.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-head">
+              <div>
+                <div class="section-eyebrow">Suggestions</div>
+                <h2 class="section-title">Quick prompts</h2>
+              </div>
+            </div>
+            <div class="list-stack">
+              <button class="button-ghost" onclick="usePrompt('What are the biggest risks in this business model?')">Biggest risks</button>
+              <button class="button-ghost" onclick="usePrompt('Break the launch plan into weekly milestones.')">Weekly milestones</button>
+              <button class="button-ghost" onclick="usePrompt('How should I prioritize customer validation?')">Customer validation</button>
+              <button class="button-ghost" onclick="usePrompt('What should I do with a limited budget?')">Limited budget plan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
-  <div class="input-footer">GrowthPilot AI provides business guidance for informational purposes. Always validate with a professional.</div>
 </div>
+
 <script src="../js/api.js"></script>
 <script>
   requireAuth();
@@ -150,73 +157,71 @@
   const welcomeScreen = document.getElementById("welcomeScreen");
   const inputBox = document.getElementById("inputBox");
   const sendBtn = document.getElementById("sendBtn");
-  let isRecording = false, recognition;
+  const user = getUser();
+  document.getElementById("topUserName").textContent = user.name || "Agent Operator";
+  document.getElementById("avatarEl").textContent = (user.name || "A").charAt(0).toUpperCase();
+
   let conversationHistory = [];
   let currentIdeaId = null;
   let ideaContext = null;
+  let isRecording = false;
+  let recognition;
 
-  // Auto-resize textarea
   inputBox.addEventListener("input", function() {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
   inputBox.addEventListener("keydown", function(e) {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   });
 
   function showChat() {
     welcomeScreen.style.display = "none";
-    messagesArea.style.display = "flex";
+    messagesArea.style.display = "block";
   }
 
   function formatText(text) {
-    // Convert markdown-style bold **text** to <strong>
     return text
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n\n/g, "<br><br>")
-      .replace(/\n•/g, "<br>•")
-      .replace(/\n📍/g, "<br>📍")
       .replace(/\n/g, "<br>");
   }
 
   function addMessage(content, isUser, insights) {
     showChat();
-    const row = document.createElement("div");
-    row.className = "msg-row" + (isUser ? " user" : "");
-    const avatar = document.createElement("div");
-    avatar.className = "msg-avatar";
-    avatar.textContent = isUser ? "👤" : "🤖";
-    const right = document.createElement("div");
-    const bubble = document.createElement("div");
-    bubble.className = "msg-bubble";
-    bubble.innerHTML = isUser ? content.replace(/\n/g,"<br>") : formatText(content);
+    const wrapper = document.createElement("div");
+    wrapper.className = "terminal-line";
+    const prompt = document.createElement("span");
+    prompt.className = "terminal-prompt";
+    prompt.textContent = isUser ? ">" : "#";
+    const output = document.createElement("span");
+    output.className = "terminal-output";
+    output.innerHTML = isUser ? content.replace(/\n/g, "<br>") : formatText(content);
     if (insights && insights.length) {
-      const cards = document.createElement("div");
-      cards.className = "insight-cards";
-      insights.forEach(d => {
-        const c = document.createElement("div");
-        c.className = "insight-card";
-        c.innerHTML = `<div class="ic-val">${d.val}</div><div class="ic-lbl">${d.lbl}</div>`;
-        cards.appendChild(c);
+      const meta = document.createElement("div");
+      meta.style.marginTop = "12px";
+      meta.className = "button-row";
+      insights.forEach((item) => {
+        const pill = document.createElement("span");
+        pill.className = "mini-pill";
+        pill.textContent = item.lbl + ": " + item.val;
+        meta.appendChild(pill);
       });
-      bubble.appendChild(cards);
+      output.appendChild(meta);
     }
-    const meta = document.createElement("div");
-    meta.className = "msg-meta";
-    meta.textContent = new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-    right.appendChild(bubble); right.appendChild(meta);
-    row.appendChild(avatar); row.appendChild(right);
-    messagesArea.appendChild(row);
+    wrapper.appendChild(prompt);
+    wrapper.appendChild(output);
+    messagesArea.appendChild(wrapper);
     messagesArea.scrollTop = messagesArea.scrollHeight;
   }
 
   function showTyping() {
     const row = document.createElement("div");
-    row.className = "typing-row"; row.id = "typingIndicator";
-    const av = document.createElement("div"); av.className = "msg-avatar"; av.textContent = "🤖";
-    const bub = document.createElement("div"); bub.className = "typing-bubble";
-    bub.innerHTML = "<span></span><span></span><span></span>";
-    row.appendChild(av); row.appendChild(bub);
+    row.className = "terminal-line";
+    row.id = "typingIndicator";
+    row.innerHTML = '<span class="terminal-prompt">#</span><span class="terminal-output">thinking...</span>';
     messagesArea.appendChild(row);
     messagesArea.scrollTop = messagesArea.scrollHeight;
   }
@@ -239,13 +244,13 @@
 
     try {
       const data = await api.sendChat(conversationHistory, ideaContext);
-      const aiText = data.response || "Sorry, I couldn't generate a response. Please try again.";
+      const aiText = data.response || "Sorry, I couldn't generate a response.";
       conversationHistory.push({ role: "assistant", content: aiText });
       removeTyping();
       addMessage(aiText, false);
-    } catch(e) {
+    } catch (e) {
       removeTyping();
-      addMessage("⚠️ **Connection Error**\n\nCould not reach the AI backend. Please make sure:\n• The backend server is running (`python run.py` in `/backend`)\n• It's accessible at http://localhost:8000\n\nError: " + e.message, false);
+      addMessage("Connection error: " + e.message, false);
     }
     sendBtn.disabled = false;
   }
@@ -256,10 +261,16 @@
     ideaContext = null;
     currentIdeaId = null;
     messagesArea.style.display = "none";
-    welcomeScreen.style.display = "flex";
+    welcomeScreen.style.display = "block";
+    document.getElementById("contextPanel").innerHTML = `
+      <div class="activity-item">
+        <div class="activity-copy">
+          <strong>No workflow selected</strong>
+          <span>Open a completed run from the left to attach context.</span>
+        </div>
+      </div>`;
     window.history.pushState({}, "", "chat.html");
-    // Reset sidebar active
-    document.querySelectorAll(".history-item").forEach(h => h.classList.remove("active"));
+    document.querySelectorAll("[data-idea-item]").forEach((item) => item.classList.remove("active"));
   }
 
   function usePrompt(text) {
@@ -267,12 +278,26 @@
     inputBox.focus();
   }
 
-  function useWelcomeChip(chip) {
-    inputBox.value = chip.textContent.replace(/^[^\s]+\s/, "");
-    sendMessage();
+  function updateContextPanel(idea, response) {
+    const panel = document.getElementById("contextPanel");
+    panel.innerHTML = `
+      <div class="activity-item">
+        <div class="activity-copy">
+          <strong>${idea.title}</strong>
+          <span>${idea.category || "General"} • ${idea.location || "No location"} • ${idea.budget ? formatBudget(idea.budget) : "No budget"}</span>
+        </div>
+        <span class="status-badge ${response && response.feasibility ? "success" : "warning"}">
+          ${response && response.feasibility ? "Loaded" : "Pending"}
+        </span>
+      </div>
+      <div class="activity-item">
+        <div class="activity-copy">
+          <strong>Idea description</strong>
+          <span>${(idea.description || "").substring(0, 160)}${(idea.description || "").length > 160 ? "..." : ""}</span>
+        </div>
+      </div>`;
   }
 
-  // Load idea from URL param
   async function loadIdeaResult() {
     const params = new URLSearchParams(window.location.search);
     const ideaId = params.get("idea_id");
@@ -289,99 +314,118 @@
 
       const idea = result.idea || {};
       const resp = result.response || {};
+      ideaContext = `Title: ${idea.title}, Description: ${(idea.description || "").substring(0, 200)}, Category: ${idea.category}, Budget: ${idea.budget}, Location: ${idea.location}`;
+      updateContextPanel(idea, resp);
 
-      // Set context for follow-up questions
-      ideaContext = `Title: ${idea.title}, Description: ${(idea.description||"").substring(0,200)}, Category: ${idea.category}, Budget: ${idea.budget}, Location: ${idea.location}`;
-
-      // User message
-      addMessage(`📋 **Analyzing:** ${idea.title}\n${(idea.description||"").substring(0,80)}...`, true);
+      addMessage(`Loaded workflow: ${idea.title}\nStatus: ${idea.status || "pending"}`, true);
 
       if (!resp || !resp.feasibility) {
-        addMessage("⚠️ This idea hasn't been analyzed yet. The analysis is still running or failed.\n\nYou can ask me questions about your business, or go back to the dashboard and click **⚡ Analyze** on your idea.", false);
+        addMessage("This workflow has not completed analysis yet. You can still ask the agent to think through the idea manually.", false);
         return;
       }
 
-      // Build rich response
-      const score = resp.idea_score || 74;
-      let html = `**📊 Business Analysis Complete for "${idea.title}"**\n\n`;
-      html += `**Feasibility Assessment:**\n${resp.feasibility}\n\n`;
-      if (resp.cost_breakdown) html += `**💰 Cost Breakdown:**\n${resp.cost_breakdown}\n\n`;
-
       const roadmap = parseList(resp.roadmap);
-      if (roadmap.length) {
-        html += `**🗺️ Growth Roadmap:**\n`;
-        roadmap.forEach((step, i) => { html += `📍 Step ${i+1}: ${step}\n`; });
-        html += "\n";
-      }
       const marketing = parseList(resp.marketing);
-      if (marketing.length) {
-        html += `**📣 Marketing Strategy:**\n`;
-        marketing.forEach(tip => { html += `• ${tip}\n`; });
-        html += "\n";
+      let html = `**Analysis complete for ${idea.title}**\n\n`;
+      html += `**Feasibility**\n${resp.feasibility}\n\n`;
+      if (resp.cost_breakdown) html += `**Cost model**\n${resp.cost_breakdown}\n\n`;
+      if (roadmap.length) {
+        html += `**Roadmap**\n`;
+        roadmap.forEach((step, index) => {
+          html += `${index + 1}. ${step}\n`;
+        });
+        html += `\n`;
       }
-      html += `*Ask me any follow-up questions about this analysis!*`;
+      if (marketing.length) {
+        html += `**Growth notes**\n`;
+        marketing.forEach((tip) => {
+          html += `- ${tip}\n`;
+        });
+        html += `\n`;
+      }
+      html += `Ask for deeper breakdowns, edge cases, or next actions.`;
 
       const insights = [
-        {val: score + "%", lbl: "Idea Score"},
-        {val: idea.budget ? formatBudget(idea.budget) : "—", lbl: "Budget"},
-        {val: resp.stage || "MVP", lbl: "Stage"}
+        { val: (resp.idea_score || 74) + "%", lbl: "Idea Score" },
+        { val: idea.budget ? formatBudget(idea.budget) : "—", lbl: "Budget" },
+        { val: resp.stage || "Idea", lbl: "Stage" }
       ];
 
       addMessage(html, false, insights);
-
-      // Add to sidebar
-      const hist = document.getElementById("chatHistory");
-      const item = document.createElement("div");
-      item.className = "history-item active";
-      item.textContent = idea.title.substring(0, 28);
-      item.onclick = () => window.location.href = "chat.html?idea_id=" + ideaId;
-      hist.insertBefore(item, hist.firstChild);
-
-    } catch(e) {
+    } catch (e) {
       removeTyping();
-      addMessage("⚠️ Could not load analysis. " + e.message + "\n\nYou can still ask me questions about your business!", false);
+      addMessage("Could not load workflow analysis. " + e.message, false);
     }
   }
 
-  // Load ideas in sidebar
   async function loadSidebar() {
     try {
       const ideas = await api.listIdeas();
       const hist = document.getElementById("chatHistory");
       hist.innerHTML = "";
-      (ideas || []).slice(0, 8).forEach(idea => {
-        const item = document.createElement("div");
-        item.className = "history-item" + (String(idea.id) === String(currentIdeaId) ? " active" : "");
-        item.textContent = idea.title.substring(0, 28);
-        item.title = idea.title;
-        item.onclick = () => window.location.href = "chat.html?idea_id=" + idea.id;
+      (ideas || []).slice(0, 8).forEach((idea) => {
+        const item = document.createElement("a");
+        item.className = "nav-link" + (String(idea.id) === String(currentIdeaId) ? " active" : "");
+        item.href = "chat.html?idea_id=" + idea.id;
+        item.dataset.ideaItem = "true";
+        item.innerHTML = `
+          <span class="nav-icon">${idea.status === "analyzed" ? "●" : "◌"}</span>
+          <span class="nav-copy">
+            <strong>${idea.title.substring(0, 24)}</strong>
+            <span>${idea.category || "General"} • ${timeAgo(idea.created_at)}</span>
+          </span>`;
         hist.appendChild(item);
       });
       if (!ideas || !ideas.length) {
-        hist.innerHTML = '<div style="font-size:12px;color:rgba(245,240,232,0.25);padding:8px 4px">No ideas yet. <a href="form.html" style="color:var(--amber)">Create one →</a></div>';
+        hist.innerHTML = `
+          <div class="empty-card">
+            <strong>No workflows yet</strong>
+            <div class="section-copy">Create your first task to start using the agent console.</div>
+            <div class="button-row" style="justify-content:center; margin-top:16px;">
+              <a class="button" href="form.html">Create task</a>
+            </div>
+          </div>`;
       }
-    } catch(e) { /* silent */ }
+    } catch (e) {
+      document.getElementById("chatHistory").innerHTML = `
+        <div class="empty-card">
+          <strong>Could not load workflows</strong>
+          <div class="section-copy">Check the API connection and try again.</div>
+        </div>`;
+    }
   }
 
-  // Voice input
+  function copyTranscript() {
+    const text = messagesArea.innerText || "";
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
+
   function toggleVoice() {
-    const btn = document.getElementById("voiceBtn");
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
-      alert("Voice input is not supported in this browser. Try Chrome."); return;
+      alert("Voice input is not supported in this browser.");
+      return;
     }
     if (isRecording) {
-      recognition.stop(); isRecording = false; btn.classList.remove("recording");
+      recognition.stop();
+      isRecording = false;
     } else {
       recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = "en-IN"; recognition.interimResults = false;
-      recognition.onresult = e => { inputBox.value = e.results[0][0].transcript; };
-      recognition.onend = () => { isRecording = false; btn.classList.remove("recording"); };
-      recognition.onerror = () => { isRecording = false; btn.classList.remove("recording"); };
-      recognition.start(); isRecording = true; btn.classList.add("recording");
+      recognition.lang = "en-IN";
+      recognition.interimResults = false;
+      recognition.onresult = (e) => {
+        inputBox.value = e.results[0][0].transcript;
+      };
+      recognition.onend = () => {
+        isRecording = false;
+      };
+      recognition.onerror = () => {
+        isRecording = false;
+      };
+      recognition.start();
+      isRecording = true;
     }
   }
 
-  // Init
   loadSidebar();
   loadIdeaResult();
 </script>

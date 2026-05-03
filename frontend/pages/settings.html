@@ -3,288 +3,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GrowthPilot – Settings</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root{--ink:#0a0a0f;--cream:#f5f0e8;--amber:#f5a623;--amber-deep:#d4860a;--sage:#2d4a3e;--sage-light:#3d6b5a;--panel:#111118;--card:#13131d;--border:rgba(255,255,255,0.07);}
-  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--ink);color:var(--cream);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;}
-  .sidenav{width:220px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0;position:fixed;top:0;bottom:0;left:0;z-index:20;}
-  .sidenav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--cream);text-decoration:none;padding:0 20px;margin-bottom:40px;display:block;}
-  .sidenav-logo span{color:var(--amber);}
-  .nav-section{margin-bottom:32px;}
-  .nav-section-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(245,240,232,0.25);padding:0 20px;margin-bottom:8px;font-weight:600;}
-  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;margin:0 8px;border-radius:8px;color:rgba(245,240,232,0.5);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;}
-  .nav-item:hover{background:rgba(255,255,255,.04);color:var(--cream);}
-  .nav-item.active{background:rgba(245,166,35,.12);color:var(--amber);font-weight:600;}
-  .sidenav-bottom{margin-top:auto;padding:0 12px;}
-  .new-analysis-btn{width:100%;padding:11px;border-radius:10px;background:var(--amber);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--ink);transition:all .2s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .new-analysis-btn:hover{background:var(--amber-deep);}
-  .main{margin-left:220px;flex:1;}
-  .topbar{height:64px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;position:sticky;top:0;z-index:10;}
-  .topbar-title{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;}
-  .topbar-title span{color:rgba(245,240,232,0.4);font-weight:400;font-size:14px;margin-left:8px;font-family:'DM Sans',sans-serif;}
-  .content{padding:32px;max-width:800px;}
-  .settings-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
-  .card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
-  .setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);}
-  .setting-row:last-child{border-bottom:none;padding-bottom:0;}
-  .setting-label{font-size:14px;font-weight:500;}
-  .setting-desc{font-size:12px;color:rgba(245,240,232,0.35);margin-top:3px;}
-  .sel{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;min-width:140px;}
-  .sel:focus{border-color:rgba(245,166,35,.4);}
-  .sel option{background:#1a1a25;}
-  .toggle{position:relative;width:44px;height:24px;cursor:pointer;flex-shrink:0;}
-  .toggle input{opacity:0;width:0;height:0;position:absolute;}
-  .toggle-track{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;transition:background .3s;}
-  .toggle input:checked + .toggle-track{background:var(--amber);}
-  .toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform .3s;box-shadow:0 1px 4px rgba(0,0,0,.3);}
-  .toggle input:checked ~ .toggle-thumb{transform:translateX(20px);}
-  .profile-field{width:100%;max-width:280px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:rgba(245,240,232,0.9);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
-  .profile-field:focus{border-color:rgba(245,166,35,.4);box-shadow:0 0 0 3px rgba(245,166,35,0.08);}
-  .profile-field[readonly]{color:rgba(245,240,232,0.4);border-color:transparent;}
-  .save-btn{background:var(--amber);color:var(--ink);border:none;border-radius:8px;padding:14px 28px;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:280px;}
-  .save-btn:hover{background:var(--amber-deep);}
-  .save-btn:disabled{opacity:.5;cursor:not-allowed;}
-  .success-msg{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:#4ade80;border-radius:8px;padding:11px 16px;font-size:13px;margin-bottom:24px;display:none;align-items:center;gap:8px;}
-  .err-msg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;border-radius:8px;padding:11px 16px;font-size:13px;margin-bottom:24px;display:none;align-items:center;gap:8px;}
-  .danger-card{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:16px;padding:28px;margin-bottom:24px;}
-  .danger-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#f87171;margin-bottom:16px;}
-  .danger-btn{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:11px 24px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;}
-  .danger-btn:hover{background:rgba(239,68,68,.25);}
-  @media(max-width:768px){.sidenav{display:none;}.main{margin-left:0;}}
-</style>
+<title>Settings • GrowthPilot Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
 </head>
 <body>
-<nav class="sidenav">
-  <a href="../index.html" class="sidenav-logo">Growth<span>Pilot</span></a>
-  <div class="nav-section">
-    <div class="nav-section-label">Main</div>
-    <a class="nav-item" href="dashboard.html"><span>📊</span> Dashboard</a>
-    <a class="nav-item" href="chat.html"><span>💬</span> AI Chat</a>
-    <a class="nav-item" href="form.html"><span>📋</span> New Analysis</a>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-label">Reports</div>
-    <a class="nav-item" href="history.html"><span>📁</span> My Reports</a>
-    <a class="nav-item" href="analytics.html"><span>📈</span> Analytics</a>
-    <a class="nav-item active" href="settings.html"><span>⚙️</span> Settings</a>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-label">Account</div>
-    <a class="nav-item" href="#" onclick="logout();return false;"><span>🚪</span> Logout</a>
-  </div>
-  <div class="sidenav-bottom">
-    <a href="form.html" class="new-analysis-btn">+ New Analysis</a>
-  </div>
-</nav>
-<div class="main">
-  <div class="topbar">
-    <div class="topbar-title">Settings <span>Preferences & Profile</span></div>
-  </div>
-  <div class="content">
-    
-    <div class="success-msg" id="successMsg">✅ Settings saved successfully!</div>
-    <div class="err-msg" id="errMsg">⚠️ Failed to save.</div>
+<div class="app-shell hide-secondary">
+  <aside class="sidebar">
+    <a href="../index.html" class="sidebar-brand">
+      <div class="brand-mark">GP</div>
+      <div class="brand-copy">
+        <strong>GrowthPilot Stack</strong>
+        <span>AI execution workspace</span>
+      </div>
+    </a>
+    <nav class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">◫</span><span class="nav-copy"><strong>Dashboard</strong><span>Command center</span></span></a>
+      <a class="nav-link" href="chat.html"><span class="nav-icon">◎</span><span class="nav-copy"><strong>Agents</strong><span>Console + follow-ups</span></span></a>
+      <a class="nav-link" href="form.html"><span class="nav-icon">⌘</span><span class="nav-copy"><strong>Tasks</strong><span>Create a new run</span></span></a>
+      <a class="nav-link" href="history.html"><span class="nav-icon">⇄</span><span class="nav-copy"><strong>Workflows</strong><span>Saved runs</span></span></a>
+      <a class="nav-link" href="analytics.html"><span class="nav-icon">⋯</span><span class="nav-copy"><strong>Logs</strong><span>Metrics and throughput</span></span></a>
+      <a class="nav-link active" href="settings.html"><span class="nav-icon">⚙</span><span class="nav-copy"><strong>Settings</strong><span>Profile and preferences</span></span></a>
+    </nav>
+  </aside>
 
-    <!-- Personal Profile -->
-    <div class="settings-card">
-      <div class="card-title">📝 Personal Details</div>
-      <div class="setting-row">
-        <div><div class="setting-label">Full Name</div><div class="setting-desc">Your display name</div></div>
-        <input type="text" class="profile-field" id="profName">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Email</div><div class="setting-desc">Used for login (Read Only)</div></div>
-        <input type="email" class="profile-field" id="profEmail" readonly>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Birthdate</div></div>
-        <input type="date" class="profile-field" id="profBirthdate">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Age</div><div class="setting-desc" style="color:var(--amber)">Auto-calculated from birthdate</div></div>
-        <input type="number" class="profile-field" id="profAge" readonly style="background:rgba(255,255,255,0.02);color:rgba(245,240,232,0.5);cursor:not-allowed;">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Gender</div></div>
-        <select class="sel profile-field" id="profGender">
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Others">Others</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Mobile Number</div></div>
-        <input type="tel" class="profile-field" id="profMobile" placeholder="+91...">
+  <div class="main-shell">
+    <div class="topbar">
+      <label class="search-shell">
+        <span>⌕</span>
+        <input type="text" placeholder="Search profile fields or preferences..." aria-label="Search">
+      </label>
+      <div class="topbar-actions">
+        <a class="button-secondary" href="dashboard.html">Dashboard</a>
+        <a class="button-ghost" href="#" onclick="logout();return false;">Log out</a>
       </div>
     </div>
 
-    <!-- Career & Location -->
-    <div class="settings-card">
-      <div class="card-title">💼 Career & Location</div>
-      <div class="setting-row">
-        <div><div class="setting-label">Professional Status</div></div>
-        <select class="sel profile-field" id="profProfession">
-          <option value="Student">Student</option>
-          <option value="Job">Job</option>
-          <option value="Fresher">Fresher</option>
-          <option value="Intern">Intern</option>
-          <option value="Experienced">Experienced</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Tool Usage</div></div>
-        <select class="sel profile-field" id="profUsage">
-          <option value="Developing">Developing</option>
-          <option value="Testing">Testing</option>
-          <option value="Research">Research</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Income</div></div>
-        <input type="text" class="profile-field" id="profIncome" placeholder="$50,000">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Business Interest</div></div>
-        <input type="text" class="profile-field" id="profInterest">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Birthplace (City)</div></div>
-        <input type="text" class="profile-field" id="profCity">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">State</div></div>
-        <input type="text" class="profile-field" id="profState">
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Country</div></div>
-        <input type="text" class="profile-field" id="profCountry">
-      </div>
-    </div>
-
-    <!-- AI Preferences -->
-    <div class="settings-card">
-      <div class="card-title">🤖 AI Preferences</div>
-      <div class="setting-row">
-        <div><div class="setting-label">Response Language</div><div class="setting-desc">AI will respond in this language</div></div>
-        <select class="sel" id="settingLang">
-          <option value="en">🇬🇧 English</option>
-          <option value="hi">🇮🇳 Hindi</option>
-          <option value="gu">🇮🇳 Gujarati</option>
-          <option value="mr">🇮🇳 Marathi</option>
-          <option value="ta">🇮🇳 Tamil</option>
-          <option value="te">🇮🇳 Telugu</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Analysis Detail Level</div><div class="setting-desc">How detailed AI reports should be</div></div>
-        <select class="sel" id="settingDetail">
-          <option value="brief">Brief</option>
-          <option value="detailed">Detailed</option>
-          <option value="expert">Expert</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Features -->
-    <div class="settings-card">
-      <div class="card-title">🎙️ Features</div>
-      <div class="setting-row">
-        <div><div class="setting-label">Voice Input</div><div class="setting-desc">Use microphone to dictate ideas</div></div>
-        <label class="toggle"><input type="checkbox" id="voiceInput"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Voice Output</div><div class="setting-desc">AI reads responses aloud</div></div>
-        <label class="toggle"><input type="checkbox" id="voiceOutput"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">Notifications</div><div class="setting-desc">Get alerts when analysis is ready</div></div>
-        <label class="toggle"><input type="checkbox" id="notifications" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
-      </div>
-    </div>
-
-    <!-- Verification & Save -->
-    <div class="settings-card" style="border-color: rgba(245,166,35,0.4)">
-      <div class="card-title">🔐 Security Verification</div>
-      <div class="setting-row" style="border-bottom:none; padding-bottom:0">
-        <div><div class="setting-label">Current Password</div><div class="setting-desc" style="color:rgba(245,166,35,0.8)">Required to execute changes</div></div>
+    <main class="page-body">
+      <section class="page-header">
         <div>
-          <input type="password" class="profile-field" id="currentPassword" placeholder="Enter your password" style="margin-bottom:12px;width:100%;max-width:280px">
-          <button class="save-btn" id="saveBtn" onclick="saveSettings()">
-            <span id="saveTxt">Save All Changes</span>
-          </button>
+          <div class="section-eyebrow">Settings</div>
+          <h1 class="page-title">Settings</h1>
+          <p class="page-description">Update your profile and workspace preferences.</p>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- Log Out -->
-    <div class="danger-card" style="border-color:var(--border);background:var(--card)">
-      <div class="danger-title" style="color:var(--cream)">🚪 Log Out</div>
-      <p style="font-size:13px;color:rgba(245,240,232,0.5);margin-bottom:16px">Logging out will securely clear your session. Your data is safely stored.</p>
-      <button class="danger-btn" style="color:var(--cream);border-color:var(--border);" onclick="logout()">Log Out of GrowthPilot</button>
-    </div>
+      <div class="message-bar" id="successMsg" style="display:none; border-color:rgba(34,197,94,0.24); background:rgba(20,83,45,0.16); color:#bbf7d0;">Settings saved successfully.</div>
+      <div class="message-bar" id="errMsg"></div>
+
+      <section class="grid-2">
+        <article class="panel-card">
+          <div class="panel-head">
+            <div>
+              <div class="section-eyebrow">Profile</div>
+              <h2 class="section-title">Personal details</h2>
+            </div>
+          </div>
+          <div class="form-grid two">
+            <div>
+              <label class="field-label" for="profName">Full name</label>
+              <input class="input" id="profName" type="text">
+            </div>
+            <div>
+              <label class="field-label" for="profEmail">Email</label>
+              <input class="input" id="profEmail" type="email" readonly>
+            </div>
+            <div>
+              <label class="field-label" for="profBirthdate">Birthdate</label>
+              <input class="input" id="profBirthdate" type="date">
+            </div>
+            <div>
+              <label class="field-label" for="profAge">Age</label>
+              <input class="input" id="profAge" type="number" readonly>
+            </div>
+            <div>
+              <label class="field-label" for="profGender">Gender</label>
+              <select class="select" id="profGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="profMobile">Mobile number</label>
+              <input class="input" id="profMobile" type="tel" placeholder="+91...">
+            </div>
+            <div>
+              <label class="field-label" for="profProfession">Professional status</label>
+              <select class="select" id="profProfession">
+                <option value="Student">Student</option>
+                <option value="Job">Job</option>
+                <option value="Fresher">Fresher</option>
+                <option value="Intern">Intern</option>
+                <option value="Experienced">Experienced</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="profUsage">Tool usage</label>
+              <select class="select" id="profUsage">
+                <option value="Developing">Developing</option>
+                <option value="Testing">Testing</option>
+                <option value="Research">Research</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="profIncome">Income</label>
+              <input class="input" id="profIncome" type="text">
+            </div>
+            <div>
+              <label class="field-label" for="profInterest">Business interest</label>
+              <input class="input" id="profInterest" type="text">
+            </div>
+            <div>
+              <label class="field-label" for="profCity">City</label>
+              <input class="input" id="profCity" type="text">
+            </div>
+            <div>
+              <label class="field-label" for="profState">State</label>
+              <input class="input" id="profState" type="text">
+            </div>
+            <div>
+              <label class="field-label" for="profCountry">Country</label>
+              <input class="input" id="profCountry" type="text">
+            </div>
+          </div>
+        </article>
+
+        <div class="inspector-grid">
+          <article class="panel-card">
+            <div class="panel-head">
+              <div>
+                <div class="section-eyebrow">Preferences</div>
+                <h2 class="section-title">Workspace behavior</h2>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div>
+                <label class="field-label" for="settingLang">Response language</label>
+                <select class="select" id="settingLang">
+                  <option value="en">English</option>
+                  <option value="hi">Hindi</option>
+                  <option value="gu">Gujarati</option>
+                  <option value="mr">Marathi</option>
+                  <option value="ta">Tamil</option>
+                  <option value="te">Telugu</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" for="settingDetail">Analysis detail level</label>
+                <select class="select" id="settingDetail">
+                  <option value="brief">Brief</option>
+                  <option value="detailed">Detailed</option>
+                  <option value="expert">Expert</option>
+                </select>
+              </div>
+              <label class="check-card"><input type="checkbox" id="voiceInput"> <span><strong>Voice input</strong><span class="section-copy">Speak instead of typing.</span></span></label>
+              <label class="check-card"><input type="checkbox" id="voiceOutput"> <span><strong>Voice output</strong><span class="section-copy">Read responses aloud.</span></span></label>
+              <label class="check-card"><input type="checkbox" id="notifications"> <span><strong>Notifications</strong><span class="section-copy">Alert when analysis completes.</span></span></label>
+            </div>
+          </article>
+
+          <article class="panel-card">
+            <div class="panel-head">
+              <div>
+                <div class="section-eyebrow">Security</div>
+                <h2 class="section-title">Confirm changes</h2>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div>
+                <label class="field-label" for="currentPassword">Current password</label>
+                <input class="input" id="currentPassword" type="password" placeholder="Required to save changes">
+              </div>
+              <button class="button" id="saveBtn" onclick="saveSettings()">
+                <span id="saveTxt">Save all changes</span>
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
   </div>
 </div>
+
 <script src="../js/api.js"></script>
 <script>
   requireAuth();
 
   function showErr(msg) {
     const el = document.getElementById("errMsg");
-    el.textContent = "⚠️ " + msg;
-    el.style.display = "flex";
-    setTimeout(() => el.style.display="none", 5000);
+    el.textContent = msg;
+    el.classList.add("show");
+  }
+
+  function showSuccess() {
+    const el = document.getElementById("successMsg");
+    el.style.display = "block";
+    setTimeout(() => {
+      el.style.display = "none";
+    }, 4000);
   }
 
   async function loadSettings() {
     try {
-      const u = await api.getMe();
-      document.getElementById("profName").value = u.name || "";
-      document.getElementById("profEmail").value = u.email || "";
-      document.getElementById("profAge").value = u.age || "";
-      document.getElementById("profBirthdate").value = u.birthdate || "";
-      if(u.gender) document.getElementById("profGender").value = u.gender;
-      document.getElementById("profMobile").value = u.mobile_number || "";
-      document.getElementById("profIncome").value = u.income || "";
-      document.getElementById("profCity").value = u.city || "";
-      document.getElementById("profState").value = u.state || "";
-      document.getElementById("profCountry").value = u.country || "";
-      if(u.profession) {
-        const pSel = document.getElementById("profProfession");
-        if([...pSel.options].some(o => o.value === u.profession)) pSel.value = u.profession;
-      }
-      if(u.usage_purpose) document.getElementById("profUsage").value = u.usage_purpose;
-      document.getElementById("profInterest").value = u.business_interest || "";
+      const user = await api.getMe();
+      document.getElementById("profName").value = user.name || "";
+      document.getElementById("profEmail").value = user.email || "";
+      document.getElementById("profAge").value = user.age || "";
+      document.getElementById("profBirthdate").value = user.birthdate || "";
+      if (user.gender) document.getElementById("profGender").value = user.gender;
+      document.getElementById("profMobile").value = user.mobile_number || "";
+      document.getElementById("profIncome").value = user.income || "";
+      document.getElementById("profCity").value = user.city || "";
+      document.getElementById("profState").value = user.state || "";
+      document.getElementById("profCountry").value = user.country || "";
+      if (user.profession) document.getElementById("profProfession").value = user.profession;
+      if (user.usage_purpose) document.getElementById("profUsage").value = user.usage_purpose;
+      document.getElementById("profInterest").value = user.business_interest || "";
 
-      const s = await api.getSettings();
-      if(s.language) document.getElementById("settingLang").value = s.language;
-      if(s.ai_detail_level) document.getElementById("settingDetail").value = s.ai_detail_level;
-      document.getElementById("voiceInput").checked = !!s.voice_input;
-      document.getElementById("voiceOutput").checked = !!s.voice_output;
-      document.getElementById("notifications").checked = !!s.notifications;
+      const settings = await api.getSettings();
+      if (settings.language) document.getElementById("settingLang").value = settings.language;
+      if (settings.ai_detail_level) document.getElementById("settingDetail").value = settings.ai_detail_level;
+      document.getElementById("voiceInput").checked = !!settings.voice_input;
+      document.getElementById("voiceOutput").checked = !!settings.voice_output;
+      document.getElementById("notifications").checked = !!settings.notifications;
 
       document.getElementById("profBirthdate").addEventListener("change", function() {
-        if(!this.value) { document.getElementById("profAge").value = ""; return; }
+        if (!this.value) {
+          document.getElementById("profAge").value = "";
+          return;
+        }
         const bdate = new Date(this.value);
         const diff = Math.abs(Date.now() - bdate.getTime());
         document.getElementById("profAge").value = new Date(diff).getUTCFullYear() - 1970;
       });
-    } catch(e) { /* Defaults applied */ }
+    } catch (e) {
+      showErr("Could not load settings.");
+    }
   }
 
   async function saveSettings() {
+    document.getElementById("errMsg").classList.remove("show");
     const pw = document.getElementById("currentPassword").value;
-    if (!pw) { showErr("Please enter your current password to save changes."); return; }
+    if (!pw) {
+      showErr("Please enter your current password to save changes.");
+      return;
+    }
 
     const btn = document.getElementById("saveBtn");
     const txt = document.getElementById("saveTxt");
-    btn.disabled = true; txt.textContent = "Verifying...";
+    btn.disabled = true;
+    txt.textContent = "Saving...";
+
     try {
       await api.saveSettings({
         current_password: pw,
         name: document.getElementById("profName").value || null,
-        age: parseInt(document.getElementById("profAge").value) || null,
+        age: parseInt(document.getElementById("profAge").value, 10) || null,
         birthdate: document.getElementById("profBirthdate").value || null,
         gender: document.getElementById("profGender").value || null,
         mobile_number: document.getElementById("profMobile").value || null,
@@ -299,23 +277,20 @@
         ai_detail_level: document.getElementById("settingDetail").value,
         voice_input: document.getElementById("voiceInput").checked,
         voice_output: document.getElementById("voiceOutput").checked,
-        notifications: document.getElementById("notifications").checked,
+        notifications: document.getElementById("notifications").checked
       });
-      txt.textContent = "Save All Changes";
+      txt.textContent = "Save all changes";
       btn.disabled = false;
-      document.getElementById("currentPassword").value = ""; // Clear password for security
-      
-      const msg = document.getElementById("successMsg");
-      msg.style.display = "flex";
-      setTimeout(() => msg.style.display = "none", 4000);
-      
-      // Update local storage name if changed
+      document.getElementById("currentPassword").value = "";
       localStorage.setItem("gp_name", document.getElementById("profName").value);
-    } catch(e) {
-      txt.textContent = "Save All Changes"; btn.disabled = false;
-      showErr(e.message);
+      showSuccess();
+    } catch (e) {
+      txt.textContent = "Save all changes";
+      btn.disabled = false;
+      showErr(e.message || "Failed to save settings.");
     }
   }
+
   loadSettings();
 </script>
 </body>

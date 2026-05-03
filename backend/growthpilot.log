@@ -20,3 +20,17 @@ Traceback (most recent call last):
 AttributeError: module 'bcrypt' has no attribute '__about__'
 2026-04-18 15:38:52,796 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '<unknown>'
 2026-04-18 15:38:52,796 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
+2026-05-03 21:44:06,020 - main - INFO - 🚀 Initializing GrowthPilot Backend...
+2026-05-03 21:44:07,284 - passlib.utils.compat - DEBUG - loaded lazy attr 'SafeConfigParser': <class 'configparser.ConfigParser'>
+2026-05-03 21:44:07,284 - passlib.utils.compat - DEBUG - loaded lazy attr 'NativeStringIO': <class '_io.StringIO'>
+2026-05-03 21:44:07,284 - passlib.utils.compat - DEBUG - loaded lazy attr 'BytesIO': <class '_io.BytesIO'>
+2026-05-03 21:44:07,285 - passlib.registry - DEBUG - registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+2026-05-03 21:44:07,298 - main - INFO - 📊 Creating database tables...
+2026-05-03 21:44:07,299 - main - INFO - ✅ Database tables initialized successfully
+2026-05-03 21:44:07,299 - main - INFO - ⚙️ Configuring CORS...
+2026-05-03 21:44:07,299 - main - INFO - ✅ CORS middleware configured
+2026-05-03 21:44:07,299 - main - INFO - 🔌 Loading routers...
+2026-05-03 21:44:07,316 - main - INFO - ✅ All routers loaded successfully
+2026-05-03 21:44:07,317 - main - INFO - 🎉 GrowthPilot Backend started successfully!
+2026-05-03 21:44:07,317 - main - INFO - 📖 API Docs available at: http://localhost:8000/docs
+2026-05-03 21:44:07,317 - main - INFO - 🔒 Auth routes: /auth/register, /auth/login
